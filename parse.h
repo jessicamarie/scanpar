@@ -43,9 +43,9 @@ struct conditional{
   struct statement *ifs;
 };
 
-struct expression* newExpression(string *arr);
-struct identifier* newIdentifier(string *arr);
-struct operation* newOperation(string *arr);
+struct expression* newExpression(string arr[][100], int idx);
+struct identifier* newIdentifier(string arr[][100], int idx);
+struct operation* newOperation(string arr[][100], int idx);
 struct conditional* newConditional(string *arr);
 void printExpression(struct expression *expression_node);
 
@@ -53,7 +53,7 @@ void printExpression(struct expression *expression_node);
 // Function Prototypes
 int isArray(string *arr);
 int isAssignment(string *arr);
-int isExpression(string *arr);
+int isExpression(string arr[][100], int idx);
 int isOp(string operator);
 int isConditional(string *arr);
 void parse(char *lineData[LIMIT][MAXTOKS], int tokensInLine[LIMIT], int lineNumGlobal);

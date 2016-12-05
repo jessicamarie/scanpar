@@ -10,125 +10,46 @@
 
 
 void parse(char *lineData[LIMIT][MAXTOKS], int tokensInLine[LIMIT], int lineNumGlobal){
-  int k = 0, i = 0;
-  //this was for debugging purposes:
-  //printf("lng = %d\n", lineNumGlobal);
-  //for (k = 1; k < lineNumGlobal; k++){
-    //printf("TokensinlinePARSER %d = %d\n", k, tokensInLine[k]);
-    //printf("fuck = %s\n\n", lineData[k][0]);
-    //tokensInLineScan[k] = tokensInLine[k];
-  //}
-
-
-  printf("Begin Parsing\n");
-  char *thisLine[MAXTOKS];
-  thisLine[0] = lineData[8][0];
-  thisLine[1] = lineData[8][1];
-  printf("equality = %d\n", strcmp(thisLine[0], "="));
-  printf("equality = %d\n", strcmp(thisLine[1], "="));
-  for (k = 1; k < lineNumGlobal; k++){
-    if(tokensInLine[k] > 3) {
-      //printf("tokens in line %d = %d\n",k, tokensInLine[k]);
-      //printf("thisLine = {");
-      for (i = 0; i < tokensInLine[k]; i++){
-	thisLine[i] = lineData[k][i];
-	//	printf("\"%s\", ", thisLine[i]);
-
+  int k = 0, l = 0;
+  for(l=0; l < LIMIT; l++){
+    for(k=0; k < tokensInLine[l]; k++){
+      //printf("%s\n", lineData[l][k]);
+      if (isExpression(lineData, l)){
+        newExpression(lineData, l);  
       }
-      //printf("}\n");
-      //Right now, this line /should/ probably have the same format as your array[6] did I THINK. But isAssignment
-      //etc aren't functioning / printing these debugging statements. At least line 8 in test.c should be an assignment!
-      if (isAssignment(thisLine)){
-	printf("assignment\n");
-	if (isExpression(thisLine)){
-	  newExpression(thisLine);
-	  printf("expression\n");
-	}
-	else{
-	  newIdentifier(thisLine);
-	  printf("identifier\n");
-	}
-      }
-      else if (isConditional(thisLine)){
-	newConditional(thisLine);
-	printf("conditional\n");
-	}
     }
   }
-
 }
 
-main(){
- 
-  string array[6] = {"a", "=", "1", "+", "2", ";"};
-  newExpression(array);
-}
-
-// Main Function
-/*int main(int argc, string argv[]){
-  
-  
-  string array[6] = {"a", "=", "1", "+", "2", ";"}; // Example input 
-  printf("%s %s %s %s %s %s \n", array[0], array[1], array[2], array[3], array[4], array[5]);
-  //int i;
-  //printf("%d\n", tokensInLine[8]);
-  //for (i=0;i<tokensInLine[8];i++){
-  //  printf("%s ", linePositions[8][i]);
-  //}
-  /*  int k = 0;
-  printf("%d\n", lineNumGlobal);
-  for (k = 0; k < lineNumGlobal; k++){
-    printf("Tokensinline %d = %d\n", k, tokensInLine[k]);
-    //tokensInLineScan[k] = tokensInLine[k];
-    }
-  //  printf
-  if (isAssignment(array)){
-    if (isExpression(array)){
-      newExpression(array);
-    }
-    else{
-      newIdentifier(array);
-    }
-  }
-  else if (isConditional(array)){
-    newConditional(array);
-  }
-}
-*/
 //Function definitions
-
 int isArray(char **arr){
   return (!strcmp(arr[1], "[") && !strcmp(arr[3], "]"));
 }
-
 int isAssignment(char **arr){
   if(!strcmp(arr[1], "=")){
     return 1;
   }
   return 0;
 }
-
-int isExpression(char **arr){
-  return isOp(arr[3]);
+int isExpression(char *arr[][100], int idx){
+  printf("%s", arr[idx][0]);
+  return isOp(arr[idx][3]);
 }
-
 int isOp(string operator){
-  return operator == "+" || operator == "-" || operator == "*" || operator == "/";
+  return strcmp(operator, "+") || strcmp(operator, "-") || strcmp(operator,"*") || strcmp(operator, "/");
 }
-
 int isConditional(char **arr){
   return arr[0] == "if";
 }
-
-struct expression* newExpression(string *arr){
+struct expression* newExpression(string arr[][100], int idx){
   struct expression* eq_node = malloc(sizeof(struct expression)); 
   eq_node->eq = equals; 
-  struct identifier* i = newIdentifier(arr);
-  struct operation* p = newOperation(arr);
+  struct identifier* i = newIdentifier(arr, idx);
+  struct operation* p = newOperation(arr, idx);
   eq_node->id = i;
   eq_node->op = p;
   
-  printExpression(eq_node);
+  //printExpression(eq_node);
 }
 
 void printExpression(struct expression* exp){
@@ -140,21 +61,23 @@ void printExpression(struct expression* exp){
 
 }
 
-struct identifier* newIdentifier(string *arr){
+struct identifier* newIdentifier(string arr[][100], int idx){
   struct identifier* id_node = malloc(sizeof (struct identifier)); 
-  id_node->name = arr[0];
+  id_node->name = arr[idx][0];
   id_node->t;
+  return id_node;
 }
 
-struct operation* newOperation(string *arr){
+struct operation* newOperation(string arr[][100], int idx){
   struct operation* op_node = malloc(sizeof(struct operation));
   struct term* term_node1 = malloc(sizeof(struct term));
   struct term* term_node2 = malloc(sizeof(struct term));
-  op_node->opr= arr[3];
-  term_node1->literal = arr[2];
-  term_node2->literal = arr[4];  
+  op_node->opr= arr[idx][3];
+  term_node1->literal = arr[idx][2];
+  term_node2->literal = arr[idx][4];  
   op_node->term1 = term_node1;
   op_node->term2 = term_node2;
+  return op_node;
 }
 
 
