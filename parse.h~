@@ -1,9 +1,0 @@
-// Function Prototypes
-int isArray(string *arr);
-int isAssignment(string *arr);
-int isExpression(string *arr);
-int isOp(string operator);
-int isConditional(string *arr);
-void parse(char *lineData[LIMIT][MAXTOKS], int tokensInLine[LIMIT], int lineNumGlobal);
-//void readData();
-

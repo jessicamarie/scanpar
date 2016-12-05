@@ -8,6 +8,7 @@
 
 // Grammar Definitions are now in parse.h
 
+
 void parse(char *lineData[LIMIT][MAXTOKS], int tokensInLine[LIMIT], int lineNumGlobal){
   int k = 0, i = 0;
   //this was for debugging purposes:
@@ -55,6 +56,12 @@ void parse(char *lineData[LIMIT][MAXTOKS], int tokensInLine[LIMIT], int lineNumG
     }
   }
 
+}
+
+main(){
+ 
+  string array[6] = {"a", "=", "1", "+", "2", ";"};
+  newExpression(array);
 }
 
 // Main Function
@@ -118,6 +125,19 @@ struct expression* newExpression(string *arr){
   eq_node->eq = equals; 
   struct identifier* i = newIdentifier(arr);
   struct operation* p = newOperation(arr);
+  eq_node->id = i;
+  eq_node->op = p;
+  
+  printExpression(eq_node);
+}
+
+void printExpression(struct expression* exp){
+  printf("assignment\n");
+  printf("  /  |  \\\n");
+  printf(" %s   =   %s\n",exp->id->name, exp->op->opr);
+  printf("        / \\\n");
+  printf("       %s   %s\n", exp->op->term1->literal, exp->op->term2->literal);
+
 }
 
 struct identifier* newIdentifier(string *arr){
@@ -130,12 +150,13 @@ struct operation* newOperation(string *arr){
   struct operation* op_node = malloc(sizeof(struct operation));
   struct term* term_node1 = malloc(sizeof(struct term));
   struct term* term_node2 = malloc(sizeof(struct term));
-  op_node->op = arr[3];
-  op_node->term1 = term_node1;
-  op_node->term2 = term_node2;
+  op_node->opr= arr[3];
   term_node1->literal = arr[2];
   term_node2->literal = arr[4];  
+  op_node->term1 = term_node1;
+  op_node->term2 = term_node2;
 }
+
 
 struct conditional* newConditional(string *arr){
   struct conditional* cond_node = malloc(sizeof(struct conditional));

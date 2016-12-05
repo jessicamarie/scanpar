@@ -22,7 +22,7 @@ struct term{
 };
 
 struct operation{
-  string op;
+  string opr;
   struct term *term1;
   struct term *term2;
 };
@@ -47,7 +47,7 @@ struct expression* newExpression(string *arr);
 struct identifier* newIdentifier(string *arr);
 struct operation* newOperation(string *arr);
 struct conditional* newConditional(string *arr);
-
+void printExpression(struct expression *expression_node);
 
 
 // Function Prototypes
